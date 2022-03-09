@@ -18,13 +18,22 @@ class ItemModel(db.Model):
         self.store_id = store_id
 
     def json(self):
-        return {"name": self.name, "price": self.price}
+        return {
+            "id": self.id, 
+            "name": self.name, 
+            "price": self.price, 
+            "store_id": self.store_id
+            }
 
     @classmethod
     def find_by_name(cls, name):
         return ItemModel.query.filter_by(name=name).first() # this essentially is using sqlalchemy to create queries and filer queries where name = name. 
         # this is pretty much doing the same as SELECT * FROM items WHERE name = name LIMIT 1 which means the first one 
 
+    @classmethod
+    def find_all(cls):
+        return cls.query.all()
+    
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()

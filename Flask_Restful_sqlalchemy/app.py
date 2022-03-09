@@ -1,3 +1,4 @@
+from Flask_Restful_sqlalchemy.resources.user import User
 from flask import Flask, app
 from flask_restful import Api # Resource is just a thing our Api can return
 # from flask_jwt import JWT, jwt_required
@@ -11,6 +12,7 @@ from resources.store import Store, StoreList
 app = Flask(__name__) # to create an app
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db' # this will read use sqlalchemy to read the data.db file and refer to it. 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # turns off the flask_sqlalchemy notification tracker but doesn't turn off sqlalchemy notification tracker. 
+app.config['PROPAGATE_EXCEPTIONS'] = True # If you allow this Flask JWT can raise there own exceptions to the user and errors
 app.secret_key = 'patrik' # < -- this is used to tie a secret key to your api 
 api = Api(app) # going to allow us to add resources very easily to it. It works with resources and every resource is a class 
 
@@ -51,6 +53,7 @@ api.add_resource(Store, '/store/<string:name>')
 api.add_resource(StoreList, '/stores')
 
 api.add_resource(UserRegister, '/register')
+api.add_resource(User, '/user/<int:user_id>')
 
 if __name__ == '__main__':
     db.init_app(app)

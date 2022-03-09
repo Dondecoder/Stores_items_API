@@ -31,7 +31,7 @@ class Item(Resource):
         # normal json type. Problem with this is that you don't look at the header so it will process data through json even if it's not correct. 
         # silent = true does not return an error it just returns none. If you have no clue with this means look into postman in the headers section and content type for
         # more info
-        item = ItemModel(name, data['price'], data['store_id']) # data['price'] it is a dictionary and it will be extracting the price key that it has in the dictionary
+        item = ItemModel(name, **data) # data['price'] it is a dictionary and it will be extracting the price key that it has in the dictionary
         try:
             item.save_to_db()
         except:
@@ -62,5 +62,5 @@ class Item(Resource):
 
 class ItemList(Resource):
     def get(self):
-       return {'items': list(map(lambda x: x.json(), ItemModel.query.all()))} # used to get all items in the items variable
+       return {'items': [x.json() for x in ItemModel.find_all()]} # used to get all items in the items variable
     # return {'items': [item.json() for item in ItemModel.query.all()]} alternative to using lambda to retrieve all items. 
